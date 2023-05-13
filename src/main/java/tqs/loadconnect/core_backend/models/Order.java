@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import tqs.loadconnect.core_backend.OrderStatus;
+import tqs.loadconnect.core_backend.Enums.OrderStatusEnum;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -22,7 +22,7 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private Date dateOrdered;
-    private OrderStatus status; // PENDING, IN_TRANSIT, DELIVERED, CANCELLED
+    private OrderStatusEnum status; // PENDING, IN_TRANSIT, DELIVERED, CANCELLED
     private String description;
     private float price;
     private float weight;

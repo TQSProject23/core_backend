@@ -2,6 +2,7 @@ package tqs.loadconnect.core_backend.models;
 
 import jakarta.persistence.*;
 import lombok.*;
+import tqs.loadconnect.core_backend.Enums.RoleEnum;
 
 @Entity
 @Data
@@ -18,5 +19,9 @@ public class User {
     private String password;
     private String name;
     private String phoneNumber;
+
+    @Enumerated(EnumType.STRING)
+    private RoleEnum role;
+
 
 }

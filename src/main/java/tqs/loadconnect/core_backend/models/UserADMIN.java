@@ -1,11 +1,11 @@
 package tqs.loadconnect.core_backend.models;
 
 import lombok.NonNull;
-import tqs.loadconnect.core_backend.RoleEnum;
+import tqs.loadconnect.core_backend.Enums.RoleEnum;
 
 public class UserADMIN extends User {
 
     @NonNull    // lombok or springframework?
-    private RoleEnum role = RoleEnum.ADMIN;
+    private final RoleEnum role = RoleEnum.ADMIN;
 
 }
