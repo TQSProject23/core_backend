@@ -15,10 +15,11 @@ import java.util.List;
 @RequestMapping("/api/v1/orders/")
 public class OrderController {
 
+
     @Autowired
     private OrderService orderService;
 
-    @Autowired
+
     private PickupPointService pickupPointService;
 
 

@@ -2,12 +2,15 @@ package tqs.loadconnect.core_backend.controller;
 
 import jakarta.servlet.http.Part;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import tqs.loadconnect.core_backend.Utils.Enums.OrderStatusEnum;
 import tqs.loadconnect.core_backend.controllers.OrderController;
@@ -18,6 +21,18 @@ import tqs.loadconnect.core_backend.services.OrderService;
 
 import java.util.Date;
 import java.util.List;
+
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasSize;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
 @WebMvcTest(OrderController.class)
@@ -42,6 +57,8 @@ public class OrderControllerTest {
     private Order order1;
     private Order order2;
     private Order order3;
+
+    List<Order> allOrders;
 
     @BeforeEach
     void setUp() {
@@ -115,7 +132,30 @@ public class OrderControllerTest {
         // add orders to pickup points
         pickupPoint1.setOrders(List.of(order1, order2));
         pickupPoint2.setOrders(List.of(order3));
-        
+
+        allOrders = List.of(order1, order2, order3);
+
     }
 
+    @DisplayName("Get all orders")
+    @Test
+    void getAllOrders() throws Exception {
+
+        when(orderService.getAllDeliveries()).thenReturn(allOrders);
+
+        mvc.perform(get("/api/v1/orders/all")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$", hasSize(equalTo(3))))
+                .andExpect(jsonPath("$[0].clientName", is(order1.getClientName())))
+                .andExpect(jsonPath("$[1].clientName", is(order2.getClientName())))
+                .andExpect(jsonPath("$[2].clientName", is(order3.getClientName())))
+        ;
+
+        verify(orderService, times(1)).getAllDeliveries();
+
+    }
+
+    // ...
 }
