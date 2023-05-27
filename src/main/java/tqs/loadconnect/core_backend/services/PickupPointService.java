@@ -1,13 +1,32 @@
 package tqs.loadconnect.core_backend.services;
 
-import lombok.RequiredArgsConstructor;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import tqs.loadconnect.core_backend.models.PickupPoint;
+import tqs.loadconnect.core_backend.repositories.PickupPRepository;
+
+import java.util.List;
 
 @Service
-@RequiredArgsConstructor
 public class PickupPointService {
-    public String getAllOrders(int pickupPointId) {
-        return null;
+
+    @Autowired
+    private PickupPRepository pickupPRepository;
+
+    // add a new pickup point
+    public PickupPoint addPickupPoint(PickupPoint pp) {
+        // verify if pp already exists
+        PickupPoint existingStore = pickupPRepository.findById((long) pp.getId()).orElse(null);
+        if (existingStore != null) {
+            return null;
+        }
+        return pickupPRepository.save(pp);
+    }
+
+    // get all pickup points
+    public List<PickupPoint> getAllPickupPoints() {
+        return pickupPRepository.findAll();
     }
 
 }

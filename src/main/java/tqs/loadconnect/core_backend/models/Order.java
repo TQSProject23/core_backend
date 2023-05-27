@@ -2,44 +2,63 @@ package tqs.loadconnect.core_backend.models;
 
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import tqs.loadconnect.core_backend.Enums.OrderStatusEnum;
+import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+import tqs.loadconnect.core_backend.Utils.Enums.OrderStatusEnum;
 
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
 @Table(name = "orders")
 public class Order {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
-    private Date dateOrdered;
 
-    private OrderStatusEnum status; // PENDING, IN_TRANSIT, DELIVERED, CANCELLED
-
+    @Column(name = "description")
     private String description;
 
+    @Column(name = "price")
     private float price;
 
+    @Column(name = "weight")
     private float weight;
 
-    @ElementCollection
-    private Map<Product, Integer> products = new HashMap<>();
+    @Column(name = "date_ordered")
+    private Date dateOrdered;
 
-    @OneToOne   // One order is associated with one User (from the Store) // a CLIENT cant have multiple orders?
-    private Client client;  // Client is a user from the store
+    @Column(name = "expected_delivery_date")
+    private Date expectedDeliveryDate;
 
-    @OneToOne   // One package is associated with one pickup point
-    private PickService pickupPointService;
+    @Column(name = "pickup_date")
+    private Date pickup_date;
+
+    @Column(name = "status")
+    private OrderStatusEnum status; // PENDING, IN_TRANSIT, DELIVERED, CANCELLED
 
 
+    // associated with a Client
+    @Column(name = "client_name")
+    private String clientName;
 
+    @Column(name = "client_email")
+    private String clientEmail;
+
+
+    // many orders are associated with one pickup point and one partner store
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "pickup_point_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private PickupPoint pickupPoint;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "store_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private PartnerStore partnerStore;
 }

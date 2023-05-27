@@ -2,11 +2,10 @@ package tqs.loadconnect.core_backend.repositories;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-import tqs.loadconnect.core_backend.models.User;
+import tqs.loadconnect.core_backend.models.PickupPoint;
 
 @Repository
-public interface UserRepository extends JpaRepository<User, Long> {
-
-    User findById(long id);
+public interface PickupPRepository extends JpaRepository<PickupPoint, Long>
+{
 
 }

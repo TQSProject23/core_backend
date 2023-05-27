@@ -1,4 +1,4 @@
-package tqs.loadconnect.core_backend.Enums;
+package tqs.loadconnect.core_backend.Utils.Enums;
 
 public enum OrderStatusEnum {
     PENDING,

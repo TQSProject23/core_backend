@@ -2,7 +2,7 @@ package tqs.loadconnect.core_backend.models;
 
 import jakarta.persistence.*;
 import lombok.*;
-import tqs.loadconnect.core_backend.Enums.RoleEnum;
+import tqs.loadconnect.core_backend.Utils.Enums.RoleEnum;
 
 @Entity
 @Data
@@ -12,7 +12,7 @@ import tqs.loadconnect.core_backend.Enums.RoleEnum;
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
     private String username;
     private String email;
