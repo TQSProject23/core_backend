@@ -10,6 +10,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
+import tqs.loadconnect.core_backend.Utils.Enums.PickupPEnum;
 
 import java.util.List;
 
@@ -32,6 +33,12 @@ public class PickupPoint {
     @Column(name = "address")
     private String address;
 
+    @Column(name = "city")
+    private String city;
+
+    @Column(name = "pp_status")
+    private PickupPEnum pp_status;
+
     // one pickup point is associated with one PartnerStore
     @ManyToOne
     @JsonIgnoreProperties({"pickupPoints"})
@@ -43,7 +50,6 @@ public class PickupPoint {
     @JsonIgnoreProperties("pickupPoint")
     private List<Order> orders;
 
-
     @Override
     public String toString() {
         return "PickupPoint{" +
@@ -51,6 +57,7 @@ public class PickupPoint {
                 ", pp_name='" + pp_name + '\'' +
                 ", address='" + address + '\'' +
                 ", partnerStore=" + partnerStore +
+                ", city='" + city + '\'' +
                 ", orders=" + orders +
                 '}';
     }

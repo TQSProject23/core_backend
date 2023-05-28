@@ -3,6 +3,7 @@ package tqs.loadconnect.core_backend.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import tqs.loadconnect.core_backend.Utils.Enums.OrderStatusEnum;
 import tqs.loadconnect.core_backend.models.Order;
 import tqs.loadconnect.core_backend.services.OrderService;
 import tqs.loadconnect.core_backend.services.PickupPointService;
@@ -64,4 +65,16 @@ public class OrderController {
         }
     }
 
+
+    // update order
+    @PutMapping("/update/{id}")
+    public ResponseEntity<Order> updateOrder(@PathVariable(value="id") Integer orderId, @RequestBody String orderStatus) {
+        Order updatedOrder = orderService.updateOrder(orderId, orderStatus);
+        if (updatedOrder == null) {
+            return ResponseEntity.notFound().build();
+        } else {
+
+            return ResponseEntity.ok().body(updatedOrder);
+        }
+    }
 }

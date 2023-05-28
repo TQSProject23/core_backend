@@ -2,6 +2,7 @@ package tqs.loadconnect.core_backend.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import tqs.loadconnect.core_backend.Utils.Enums.OrderStatusEnum;
 import tqs.loadconnect.core_backend.models.Order;
 import tqs.loadconnect.core_backend.models.PickupPoint;
 import tqs.loadconnect.core_backend.repositories.OrderRepository;
@@ -48,6 +49,16 @@ public class OrderService {
         return orderRepository.save(order);
     }
 
-    // get orders by partner store
-    // ??
+    public Order updateOrder(Integer orderId, String orderStatus) {
+        Order order = orderRepository.findById(orderId).orElse(null);
+        if (order == null) {
+            return null;
+        }
+        // convert string to enum
+        OrderStatusEnum orderStatusEnum = OrderStatusEnum.valueOf(orderStatus);
+        order.setStatus(orderStatusEnum);
+        return orderRepository.save(order);
+    }
+
+
 }

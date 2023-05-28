@@ -3,6 +3,7 @@ package tqs.loadconnect.core_backend.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tqs.loadconnect.core_backend.models.PartnerStore;
+import tqs.loadconnect.core_backend.models.PickupPoint;
 import tqs.loadconnect.core_backend.repositories.PartnerStoreRepository;
 
 import java.util.List;
@@ -35,6 +36,14 @@ public class PartnerStoreService {
 
     public PartnerStore getPartnerStoreById(int id) {
         return partnerStoreRepository.findById((long) id).orElse(null);
+    }
+
+    public List<PickupPoint> getAllPickupPointsByPartnerStoreId(Integer storeId) {
+        PartnerStore store = partnerStoreRepository.findById((long) storeId).orElse(null);
+        if (store == null) {
+            return null;
+        }
+        return store.getPickupPoints();
     }
 
     // get partner store by name ???

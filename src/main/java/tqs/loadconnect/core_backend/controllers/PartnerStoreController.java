@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import tqs.loadconnect.core_backend.models.PartnerStore;
+import tqs.loadconnect.core_backend.models.PickupPoint;
 import tqs.loadconnect.core_backend.services.PartnerStoreService;
 
 import java.util.List;
@@ -45,6 +46,17 @@ public class PartnerStoreController {
             return ResponseEntity.notFound().build();
         } else {
             return ResponseEntity.ok().body(store);
+        }
+    }
+
+    // get all pickup points by partner store
+    @GetMapping("/{id}/pps")
+    public ResponseEntity<List<PickupPoint>> getAllPickupPointsByPartnerStoreId(@PathVariable(value="id") Integer storeId) {
+        List<PickupPoint> pickupPoints = partnerStoreService.getAllPickupPointsByPartnerStoreId(storeId);
+        if (pickupPoints == null) {
+            return ResponseEntity.notFound().build();
+        } else {
+            return ResponseEntity.ok().body(pickupPoints);
         }
     }
 
