@@ -24,8 +24,18 @@ public class PickupPointController {
         if (newPickupPoint == null) {
             return ResponseEntity.badRequest().build();
         } else {
-
             return ResponseEntity.ok().body(newPickupPoint);
+        }
+    }
+
+    // update a pickup point status
+    @PutMapping("/update/{id}")
+    public ResponseEntity<PickupPoint> updatePickupPointStatus(@PathVariable(value="id") int pickupPointId, @RequestBody String ppStatus) {
+        PickupPoint updatedPickupPoint = pickupPointService.updatePickupPointStatus(pickupPointId, ppStatus);
+        if (updatedPickupPoint == null) {
+            return ResponseEntity.notFound().build();
+        } else {
+            return ResponseEntity.ok().body(updatedPickupPoint);
         }
     }
 
@@ -33,6 +43,18 @@ public class PickupPointController {
     @GetMapping("/all")
     public ResponseEntity<List<PickupPoint>> getAllPickupPoints() {
         List<PickupPoint> pickupPoints = pickupPointService.getAllPickupPoints();
+        if (pickupPoints == null) {
+            return ResponseEntity.notFound().build();
+        } else {
+            return ResponseEntity.ok().body(pickupPoints);
+        }
+    }
+
+
+    // get all pickup points by city
+    @GetMapping("/city/{city}")
+    public ResponseEntity<List<PickupPoint>> getAllPickupPointsByCity(@PathVariable(value="city") String city) {
+        List<PickupPoint> pickupPoints = pickupPointService.getAllPickupPointsByCity(city);
         if (pickupPoints == null) {
             return ResponseEntity.notFound().build();
         } else {
