@@ -1,6 +1,8 @@
 package tqs.loadconnect.core_backend.models;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import lombok.*;
@@ -29,6 +31,7 @@ public class PartnerStore {   // PartnerStore is a user from the store
     private String address; //remove if maintain list
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "partnerStore")
+    @JsonIgnoreProperties("partnerStore")
     private List<PickupPoint> pickupPoints;
 
     @Override
@@ -37,7 +40,6 @@ public class PartnerStore {   // PartnerStore is a user from the store
                 "id=" + id +
                 ", ps_name='" + ps_name + '\'' +
                 ", address='" + address + '\'' +
-                ", pickupPoints=" + pickupPoints +
                 '}';
     }
 

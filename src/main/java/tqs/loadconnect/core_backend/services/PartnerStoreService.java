@@ -33,8 +33,8 @@ public class PartnerStoreService {
         return partnerStoreRepository.findById(storeId).orElse(null);
     }
 
-    public PartnerStore getPartnerStoreById(PartnerStore partnerStore) {
-        return partnerStoreRepository.findById((long) partnerStore.getId()).orElse(null);
+    public PartnerStore getPartnerStoreById(int id) {
+        return partnerStoreRepository.findById((long) id).orElse(null);
     }
 
     // get partner store by name ???
