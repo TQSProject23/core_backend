@@ -34,12 +34,13 @@ public class PickupPoint {
 
     // one pickup point is associated with one PartnerStore
     @ManyToOne
-    @JsonIgnoreProperties({"pickupPoints", "orders"})
+    @JsonIgnoreProperties({"pickupPoints"})
     @JoinColumn(name = "partnerStore", nullable = false)
     private PartnerStore partnerStore;
 
     // one pickup point is associated with many orders
-    @OneToMany(cascade = {CascadeType.ALL, CascadeType.DETACH}, mappedBy = "pickupPoint")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "pickupPoint")
+    @JsonIgnoreProperties("pickupPoint")
     private List<Order> orders;
 
 
@@ -53,4 +54,9 @@ public class PickupPoint {
                 ", orders=" + orders +
                 '}';
     }
+
+    public void addOrder(Order order) {
+        orders.add(order);
+    }
+
 }

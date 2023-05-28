@@ -40,7 +40,6 @@ public class PickupPointController {
         }
     }
 
-    // get pickup point by ID
-    // ?
+
 
 }

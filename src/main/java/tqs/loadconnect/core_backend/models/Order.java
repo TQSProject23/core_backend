@@ -1,6 +1,10 @@
 package tqs.loadconnect.core_backend.models;
 
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.OnDelete;
@@ -14,6 +18,9 @@ import java.util.Date;
 @AllArgsConstructor
 @Getter
 @Setter
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id")
 @Table(name = "orders")
 public class Order {
 
@@ -52,7 +59,23 @@ public class Order {
 
 
     @ManyToOne
-    @JoinColumn(name = "pickupPoint")
+    @JoinColumn(name = "pickupPoint", nullable = false)
+    @JsonIgnoreProperties({"orders"})
     private PickupPoint pickupPoint;
 
+    @Override
+    public String toString() {
+        return "Order{" +
+                "id=" + id +
+                ", description='" + description + '\'' +
+                ", price=" + price +
+                ", weight=" + weight +
+                ", dateOrdered=" + dateOrdered +
+                ", expectedDeliveryDate=" + expectedDeliveryDate +
+                ", pickup_date=" + pickup_date +
+                ", status=" + status +
+                ", clientName='" + clientName + '\'' +
+                ", clientEmail='" + clientEmail + '\'' +
+                '}';
+    }
 }

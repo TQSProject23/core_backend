@@ -19,14 +19,19 @@ public class OrderController {
     @Autowired
     private OrderService orderService;
 
-
+    @Autowired
     private PickupPointService pickupPointService;
 
     // create a new order
     @PostMapping("/new")
     public ResponseEntity<Order> createOrder(@RequestBody Order order) {
+        System.out.println("createOrder: " + order.toString());
         Order newOrder = orderService.createOrder(order);
-        return ResponseEntity.ok().body(newOrder);
+        if (newOrder == null) {
+            return ResponseEntity.badRequest().build();
+        } else {
+            return ResponseEntity.ok().body(newOrder);
+        }
     }
 
 
@@ -39,7 +44,7 @@ public class OrderController {
 
     // get order by ID
     @GetMapping("/{id}")
-    public ResponseEntity<Order> getDeliveryById(@PathVariable(value="id") Long orderId) {
+    public ResponseEntity<Order> getDeliveryById(@PathVariable(value="id") Integer orderId) {
         Order order = orderService.getDeliveryById(orderId);
         if (order == null) {
             return ResponseEntity.notFound().build();
