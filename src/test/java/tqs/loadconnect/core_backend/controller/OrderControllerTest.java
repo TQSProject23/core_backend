@@ -135,7 +135,7 @@ public class OrderControllerTest {
 
     }
 
-    /*@DisplayName("Get all orders")
+    @DisplayName("Get all orders")
     @Test
     @Disabled
     void getAllOrders() throws Exception {
@@ -154,7 +154,7 @@ public class OrderControllerTest {
 
         verify(orderService, times(1)).getAllDeliveries();
 
-    }*/
+    }
 
     // ...
 }
