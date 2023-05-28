@@ -33,7 +33,10 @@ jobs:
       - name: Run Docker compose file
         run: docker-compose -f docker-compose.yml up -d
       - name: Wait for MySQL to start
-        run: dockerize -wait tcp://localhost:3306 -timeout 1m
+        run: |
+          while ! docker exec pickypicky-db curl -s http://localhost:3306 > /dev/null; do
+            sleep 1
+          done
       - name: Build and analyze
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
