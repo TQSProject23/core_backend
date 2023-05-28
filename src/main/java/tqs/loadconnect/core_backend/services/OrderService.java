@@ -28,6 +28,10 @@ public class OrderService {
         return repository.findByPickupPointId(pickupPointId);
     }
 
+    public Order createOrder(Order order) {
+        return repository.save(order);
+    }
+
     // get orders by partner store
     // ??
 }

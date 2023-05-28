@@ -16,7 +16,7 @@ public class PartnerStoreService {
     // add a new partner store
     public PartnerStore addStore(PartnerStore store) {
         // verify if store already exists
-        PartnerStore existingStore = partnerStoreRepository.findById(store.getId()).orElse(null);
+        PartnerStore existingStore = partnerStoreRepository.findById((long) store.getId()).orElse(null);
         if (existingStore != null) {
             return null;
         }
@@ -31,6 +31,10 @@ public class PartnerStoreService {
     // get partner store by ID
     public PartnerStore getStoreById(Long storeId) {
         return partnerStoreRepository.findById(storeId).orElse(null);
+    }
+
+    public PartnerStore getPartnerStoreById(PartnerStore partnerStore) {
+        return partnerStoreRepository.findById((long) partnerStore.getId()).orElse(null);
     }
 
     // get partner store by name ???

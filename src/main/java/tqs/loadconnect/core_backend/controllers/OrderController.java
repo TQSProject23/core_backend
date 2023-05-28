@@ -12,7 +12,7 @@ import java.util.List;
 
 @RestController
 @CrossOrigin(origins="*")
-@RequestMapping("/api/v1/orders/")
+@RequestMapping("/api/v1/orders")
 public class OrderController {
 
 
@@ -21,6 +21,13 @@ public class OrderController {
 
 
     private PickupPointService pickupPointService;
+
+    // create a new order
+    @PostMapping("/new")
+    public ResponseEntity<Order> createOrder(@RequestBody Order order) {
+        Order newOrder = orderService.createOrder(order);
+        return ResponseEntity.ok().body(newOrder);
+    }
 
 
     // get all orders

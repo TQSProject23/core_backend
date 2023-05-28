@@ -63,40 +63,6 @@ public class OrderControllerTest {
     @BeforeEach
     void setUp() {
 
-        // ORDERS
-        order1 = new Order();
-        order1.setDescription("Item 1");
-        order1.setPrice(10.99f);
-        order1.setWeight(0.5f);
-        order1.setDateOrdered(new Date());
-        order1.setExpectedDeliveryDate(new Date());
-        order1.setPickup_date(new Date());
-        order1.setStatus(OrderStatusEnum.PENDING);
-        order1.setClientName("John Doe");
-        order1.setClientEmail("john@example.com");
-
-        order2 = new Order();
-        order2.setDescription("Item 2");
-        order2.setPrice(19.99f);
-        order2.setWeight(1.2f);
-        order2.setDateOrdered(new Date());
-        order2.setExpectedDeliveryDate(new Date());
-        order2.setPickup_date(new Date());
-        order2.setStatus(OrderStatusEnum.IN_TRANSIT);
-        order2.setClientName("Jane Smith");
-        order2.setClientEmail("jane@example.com");
-
-        order3 = new Order();
-        order3.setDescription("Item 3");
-        order3.setPrice(5.99f);
-        order3.setWeight(0.3f);
-        order3.setDateOrdered(new Date());
-        order3.setExpectedDeliveryDate(new Date());
-        order3.setPickup_date(new Date());
-        order3.setStatus(OrderStatusEnum.DELIVERED);
-        order3.setClientName("Alice Johnson");
-        order3.setClientEmail("alice@example.com");
-
         // partner stores
         partnerStore1 = new PartnerStore();
         partnerStore1.setName("Store 1");
@@ -105,7 +71,6 @@ public class OrderControllerTest {
         partnerStore2 = new PartnerStore();
         partnerStore2.setName("Store 2");
         partnerStore2.setAddress("Address 2");
-
 
         // pickup points
         pickupPoint1 = new PickupPoint();
@@ -128,10 +93,42 @@ public class OrderControllerTest {
         pickupPoint4.setAddress("Address 4");
         pickupPoint4.setPartnerStore(partnerStore3);
 
+        // ORDERS
+        order1 = new Order();
+        order1.setDescription("Item 1");
+        order1.setPrice(10.99f);
+        order1.setWeight(0.5f);
+        order1.setDateOrdered(new Date());
+        order1.setExpectedDeliveryDate(new Date());
+        order1.setPickup_date(new Date());
+        order1.setStatus(OrderStatusEnum.PENDING);
+        order1.setClientName("John Doe");
+        order1.setClientEmail("john@example.com");
+        order1.setPickupPoint(pickupPoint1);
 
-        // add orders to pickup points
-        pickupPoint1.setOrders(List.of(order1, order2));
-        pickupPoint2.setOrders(List.of(order3));
+        order2 = new Order();
+        order2.setDescription("Item 2");
+        order2.setPrice(19.99f);
+        order2.setWeight(1.2f);
+        order2.setDateOrdered(new Date());
+        order2.setExpectedDeliveryDate(new Date());
+        order2.setPickup_date(new Date());
+        order2.setStatus(OrderStatusEnum.IN_TRANSIT);
+        order2.setClientName("Jane Smith");
+        order2.setClientEmail("jane@example.com");
+        order2.setPickupPoint(pickupPoint2);
+
+        order3 = new Order();
+        order3.setDescription("Item 3");
+        order3.setPrice(5.99f);
+        order3.setWeight(0.3f);
+        order3.setDateOrdered(new Date());
+        order3.setExpectedDeliveryDate(new Date());
+        order3.setPickup_date(new Date());
+        order3.setStatus(OrderStatusEnum.DELIVERED);
+        order3.setClientName("Alice Johnson");
+        order3.setClientEmail("alice@example.com");
+        order3.setPickupPoint(pickupPoint2);
 
         allOrders = List.of(order1, order2, order3);
 

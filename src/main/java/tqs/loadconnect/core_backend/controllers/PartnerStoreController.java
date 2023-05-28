@@ -18,8 +18,10 @@ public class PartnerStoreController {
 
     // add a new partner store
     @PostMapping("/add")
-    public ResponseEntity<PartnerStore> addStore(@RequestBody PartnerStore pickupPoint) {
-        PartnerStore newStore = partnerStoreService.addStore(pickupPoint);
+    public ResponseEntity<PartnerStore> addStore(@RequestBody PartnerStore store) {
+        System.out.println("addStore");
+        System.out.println(store.toString());
+        PartnerStore newStore = partnerStoreService.addStore(store);
         return ResponseEntity.ok().body(newStore);
     }
 
@@ -36,8 +38,9 @@ public class PartnerStoreController {
 
     // get partner store by ID
     @GetMapping("/{id}")
-    public ResponseEntity<PartnerStore> getPartnerStoreById(@PathVariable(value="id") Long storeId) {
-        PartnerStore store = partnerStoreService.getStoreById(storeId);
+    public ResponseEntity<PartnerStore> getPartnerStoreById(@PathVariable(value="id") Integer storeId) {
+
+        PartnerStore store = partnerStoreService.getStoreById(Long.valueOf(storeId));
         if (store == null) {
             return ResponseEntity.notFound().build();
         } else {
