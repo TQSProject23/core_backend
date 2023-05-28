@@ -28,8 +28,9 @@ public class PickupPointService {
             return null;
         }
 
-        PartnerStore partnerStore = partnerStoreService.getPartnerStoreById(pp.getPartnerStore());
+        PartnerStore partnerStore = partnerStoreService.getPartnerStoreById(pp.getPartnerStore().getId());
         partnerStore.addPickupPoint(pp);
+        System.out.println("PS final:" + partnerStore);
         return pickupPRepository.save(pp);
     }
 
