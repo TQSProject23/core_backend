@@ -34,7 +34,7 @@ jobs:
         run: docker-compose -f docker-compose.yml up -d
       - name: Wait for MySQL to start
         run: |
-          while ! docker exec pickypicky-db curl -s http://localhost:3306 > /dev/null; do
+          while ! docker exec loadconnect-db curl -s http://localhost:3306 > /dev/null; do
             sleep 1
           done
       - name: Build and analyze
