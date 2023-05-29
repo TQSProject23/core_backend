@@ -44,6 +44,7 @@ public class OrderService {
         }
 
         PickupPoint pp = pickupPRepository.findById((long) order.getPickupPoint().getId()).orElse(null);
+        assert pp != null;
         pp.addOrder(order);
         System.out.println("PP final:" + pp);
         return orderRepository.save(order);
