@@ -10,6 +10,4 @@ import java.util.Optional;
 @Repository
 public interface NotificationRepository extends JpaRepository<Notification, Integer> {
 
-
-    Optional<Notification> findByUserName(String userName);
 }

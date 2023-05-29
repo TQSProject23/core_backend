@@ -49,7 +49,7 @@ public class NotificationController {
     }
 
     // get notifications by username
-    @GetMapping("/user/{user_name}")
+    /*@GetMapping("/user/{user_name}")
     public ResponseEntity<Optional<Notification>> getNotificationByUserName(@PathVariable(value="user_name") String userName) {
         Optional<Notification> notification = notificationService.getAllNotificationsByUserName(userName);
         if (notification.isEmpty()) {
@@ -57,7 +57,7 @@ public class NotificationController {
         } else {
             return ResponseEntity.ok().body(notification);
         }
-    }
+    }*/
 
     // delete notification by ID
     @DeleteMapping("/{id}")

@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 
@@ -29,6 +30,9 @@ public class PartnerStore {   // PartnerStore is a user from the store
 
     @Column(name = "address")
     private String address; //remove if maintain list
+
+    @Column(name = "created_at")
+    private LocalDate created_at;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "partnerStore")
     @JsonIgnoreProperties("partnerStore")

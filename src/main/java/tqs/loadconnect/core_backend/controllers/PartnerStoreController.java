@@ -11,7 +11,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/partnerstore")
-@CrossOrigin
+@CrossOrigin(origins="*")
 public class PartnerStoreController {
 
     @Autowired
@@ -58,6 +58,21 @@ public class PartnerStoreController {
         } else {
             return ResponseEntity.ok().body(pickupPoints);
         }
+    }
+
+    // return total number of partner stores
+    @GetMapping("/total")
+    public ResponseEntity<Integer> getTotalPartnerStores() {
+        Integer totalPartnerStores = partnerStoreService.getTotalPartnerStores();
+        return ResponseEntity.ok().body(totalPartnerStores);
+    }
+
+    // return number of partner stores created in the last month
+    @GetMapping("/total/lastmonth")
+    public ResponseEntity<Integer> getTotalPartnerStoresLastMonth() {
+        // TODO: implement this correctly
+        Integer totalPartnerStoresLastMonth = partnerStoreService.getTotalPartnerStoresLastMonth();
+        return ResponseEntity.ok().body(totalPartnerStoresLastMonth);
     }
 
 }

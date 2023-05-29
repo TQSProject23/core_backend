@@ -26,9 +26,9 @@ public class NotificationService {
         return notificationRepository.findById(notiID);
     }
 
-    public Optional<Notification> getAllNotificationsByUserName(String userName) {
-        return notificationRepository.findByUserName(userName);
-    }
+    /*public Optional<Notification> getAllNotificationsByUserName(String userName) {
+        return notificationRepository.findByUsername(userName);
+    }*/
 
 
 }
