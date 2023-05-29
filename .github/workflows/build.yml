@@ -75,7 +75,7 @@ jobs:
     needs: [build]
     runs-on: ubuntu-latest
     environment: 
-      name: 'Development'
+      name: 'production'
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
     
     steps:
@@ -89,7 +89,7 @@ jobs:
         uses: azure/webapps-deploy@v2
         with:
           app-name: 'loadconnect-backend'
-          slot-name: 'Development'
+          slot-name: 'production'
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
           package: '*.jar'
 
