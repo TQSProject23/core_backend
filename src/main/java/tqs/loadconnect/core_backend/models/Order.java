@@ -63,6 +63,7 @@ public class Order {
     @JsonIgnoreProperties({"orders"})
     private PickupPoint pickupPoint;
 
+
     @Override
     public String toString() {
         return "Order{" +
