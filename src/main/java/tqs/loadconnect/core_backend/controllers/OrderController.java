@@ -20,7 +20,7 @@ public class OrderController {
     @Autowired
     private OrderService orderService;
 
-    @Autowired
+
     private PickupPointService pickupPointService;
 
     // create a new order
