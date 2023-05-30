@@ -2,7 +2,7 @@ package tqs.loadconnect.core_backend.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-// import tqs.loadconnect.core_backend.repositories.NotificationRepository;
+// tqs.loadconnect.core_backend.repositories.NotificationRepository;
 import tqs.loadconnect.core_backend.models.Notification;
 
 import java.util.List;
