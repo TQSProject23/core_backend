@@ -4,10 +4,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import tqs.loadconnect.core_backend.models.User;
-import tqs.loadconnect.core_backend.models.UserDTO;
-import tqs.loadconnect.core_backend.models.UserLoginDTO;
-import tqs.loadconnect.core_backend.models.UserRegistDTO;
+import tqs.loadconnect.core_backend.models.PartnerStore;
+import tqs.loadconnect.core_backend.models.PartnerStoreDTO;
+import tqs.loadconnect.core_backend.models.PartnerStoreLoginDTO;
+import tqs.loadconnect.core_backend.models.PartnerStoreRegistDTO;
 import tqs.loadconnect.core_backend.services.AuthnService;
 
 
@@ -21,9 +21,9 @@ public class AuthnController {
     private final AuthnService authnService;
 
     @PostMapping("/register")
-    public ResponseEntity<Boolean> registerUser(@RequestBody UserRegistDTO register) {
+    public ResponseEntity<Boolean> registerPartnerStore(@RequestBody PartnerStoreRegistDTO register) {
 
-        boolean result = authnService.registerUser(register);
+        boolean result = authnService.registerPartnerStore(register);
         if (result) {
             return ResponseEntity.ok().body(true);
         } else {
@@ -33,9 +33,9 @@ public class AuthnController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<UserDTO> loginUser(@RequestBody UserLoginDTO login) {
-
-        UserDTO result = authnService.loginUser(login);
+    public ResponseEntity<PartnerStoreDTO> loginPartnerStore(@RequestBody PartnerStoreLoginDTO login) {
+        System.out.println("LOGIN: " + login.toString());
+        PartnerStoreDTO result = authnService.loginPartnerStore(login);
         System.out.println("RESULT: " + result);
         if (result != null) {
             System.out.println("YAY!" + result);

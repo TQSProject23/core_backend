@@ -80,4 +80,29 @@ public class OrderService {
     public Integer getTotalOrdersFromLastMonth() {
         return orderRepository.findAll().size();
     }
+
+    public List<Order> getDeliveriesByPartnerStoreId(Integer partnerStoreId) {
+        List<Order> allOrders = orderRepository.findAll();
+        allOrders.removeIf(order -> order.getPickupPoint().getPartnerStore().getId() != partnerStoreId);
+        return allOrders;
+    }
+
+    public Integer getTotalDeliveriesByPartnerStoreId(Integer partnerStoreId) {
+        List<Order> allOrders = orderRepository.findAll();
+        allOrders.removeIf(order -> order.getPickupPoint().getPartnerStore().getId() != partnerStoreId);
+        return allOrders.size();
+    }
+
+    public Integer getTotalOnGoingDeliveriesByPartnerStoreId(Integer partnerStoreId) {
+        List<Order> allOrders = orderRepository.findAll();
+        allOrders.removeIf(order -> order.getPickupPoint().getPartnerStore().getId() != partnerStoreId);
+        int count = 0;
+        for (Order order : allOrders) {
+            OrderStatusEnum status = order.getStatus();
+            if (status == OrderStatusEnum.IN_TRANSIT || status == OrderStatusEnum.PENDING) {
+                count++;
+            }
+        }
+        return count;
+    }
 }

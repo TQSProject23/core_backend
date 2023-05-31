@@ -6,4 +6,5 @@ import tqs.loadconnect.core_backend.models.PartnerStore;
 
 @Repository
 public interface PartnerStoreRepository extends JpaRepository<PartnerStore, Long> {
+    public PartnerStore findByEmail(String email);
 }

@@ -49,6 +49,18 @@ public class PartnerStoreController {
         }
     }
 
+    // get partner store by email
+    @GetMapping("/email/{email}")
+    public ResponseEntity<PartnerStore> getPartnerStoreByEmail(@PathVariable(value="email") String email) {
+
+        PartnerStore store = partnerStoreService.getStoreByEmail(email);
+        if (store == null) {
+            return ResponseEntity.notFound().build();
+        } else {
+            return ResponseEntity.ok().body(store);
+        }
+    }
+
     // get all pickup points by partner store
     @GetMapping("/{id}/pps")
     public ResponseEntity<List<PickupPoint>> getAllPickupPointsByPartnerStoreId(@PathVariable(value="id") Integer storeId) {
@@ -59,6 +71,29 @@ public class PartnerStoreController {
             return ResponseEntity.ok().body(pickupPoints);
         }
     }
+
+    // get number of pickup points by partner store ACCEPTED ONES
+    @GetMapping("/{id}/pps/total")
+    public ResponseEntity<Integer> getNumberOfPickupPointsByPartnerStoreId(@PathVariable(value="id") Integer storeId) {
+        Integer numberOfPickupPoints = partnerStoreService.getNumberOfPickupPointsByPartnerStoreId(storeId);
+        if (numberOfPickupPoints == null) {
+            return ResponseEntity.notFound().build();
+        } else {
+            return ResponseEntity.ok().body(numberOfPickupPoints);
+        }
+    }
+
+    // get number of pickup points PENDING by partner store
+    @GetMapping("/{id}/pps/pending")
+    public ResponseEntity<Integer> getNumberOfPendingPickupPointsByPartnerStoreId(@PathVariable(value="id") Integer storeId) {
+        Integer numberOfPendingPickupPoints = partnerStoreService.getNumberOfPendingPickupPointsByPartnerStoreId(storeId);
+        if (numberOfPendingPickupPoints == null) {
+            return ResponseEntity.notFound().build();
+        } else {
+            return ResponseEntity.ok().body(numberOfPendingPickupPoints);
+        }
+    }
+
 
     // return total number of partner stores
     @GetMapping("/total")
