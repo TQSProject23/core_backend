@@ -29,7 +29,7 @@ import java.util.List;
 
 @WebMvcTest(PartnerStoreController.class)
 @AutoConfigureMockMvc(addFilters = false)
-public class PartnerStoreServiceTest {
+public class PartnerStoreControllerTest {
 
     @Autowired
     private MockMvc mvc;
