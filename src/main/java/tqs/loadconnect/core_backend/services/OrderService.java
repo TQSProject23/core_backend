@@ -2,6 +2,8 @@ package tqs.loadconnect.core_backend.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import lombok.RequiredArgsConstructor;
 import tqs.loadconnect.core_backend.Utils.Enums.OrderStatusEnum;
 import tqs.loadconnect.core_backend.models.Order;
 import tqs.loadconnect.core_backend.models.PickupPoint;
@@ -10,14 +12,13 @@ import tqs.loadconnect.core_backend.repositories.PickupPRepository;
 
 import java.util.List;
 
+@RequiredArgsConstructor
 @Service
 public class OrderService {
 
-    @Autowired
-    private OrderRepository orderRepository;
+    private final OrderRepository orderRepository;
 
-    @Autowired
-    private PickupPRepository pickupPRepository;
+    private final PickupPRepository pickupPRepository;
 
     // get all orders
     public List<Order> getAllDeliveries() {

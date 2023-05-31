@@ -1,16 +1,17 @@
 package tqs.loadconnect.core_backend.services;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import lombok.RequiredArgsConstructor;
 import tqs.loadconnect.core_backend.models.*;
 import tqs.loadconnect.core_backend.repositories.PartnerStoreRepository;
 
+@RequiredArgsConstructor
 @Service
 public class AuthnService {
 
-    @Autowired
-    private PartnerStoreRepository partnerStoreRepository;
+    private final PartnerStoreRepository partnerStoreRepository;
 
     public boolean registerPartnerStore(PartnerStoreRegistDTO register) {
         System.out.println("REGISTER: " + register.toString());
