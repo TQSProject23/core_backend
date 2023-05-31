@@ -35,6 +35,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import io.restassured.module.mockmvc.RestAssuredMockMvc;
+import io.restassured.http.ContentType;
 
 @WebMvcTest(OrderController.class)
 @AutoConfigureMockMvc(addFilters = false)
@@ -63,6 +65,7 @@ public class OrderControllerTest {
 
     @BeforeEach
     void setUp() {
+        RestAssuredMockMvc.mockMvc(mvc);
 
         // partner stores
         partnerStore1 = new PartnerStore();
@@ -147,18 +150,19 @@ public class OrderControllerTest {
 
         when(orderService.getAllDeliveries()).thenReturn(allOrders);
 
-        mvc.perform(get("/api/v1/orders/all")
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$", hasSize(equalTo(3))))
-                .andExpect(jsonPath("$[0].clientName", is(order1.getClientName())))
-                .andExpect(jsonPath("$[1].clientName", is(order2.getClientName())))
-                .andExpect(jsonPath("$[2].clientName", is(order3.getClientName())))
-        ;
+        RestAssuredMockMvc.given()
+                .contentType(ContentType.JSON)
+                .when()
+                .get("/api/v1/orders/all")
+                .then()
+                .statusCode(200)
+                .contentType(ContentType.JSON)
+                .body("", hasSize(3))
+                .body("[0].clientName", equalTo(order1.getClientName()))
+                .body("[1].clientName", equalTo(order2.getClientName()))
+                .body("[2].clientName", equalTo(order3.getClientName()));
 
         verify(orderService, times(1)).getAllDeliveries();
-
     }
 
     @DisplayName("Create new order")
@@ -179,16 +183,18 @@ public class OrderControllerTest {
         String requestBodyJson = objectMapper.writeValueAsString(order);
 
         // Perform the POST request
-        mvc.perform(post("/api/v1/orders/new")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(requestBodyJson))
-                .andExpect(status().isOk())
-                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.clientName", is(order.getClientName())))
-                .andExpect(jsonPath("$.clientEmail", is(order.getClientEmail())))
-                .andExpect(jsonPath("$.description", is(order.getDescription())))
-                .andExpect(jsonPath("$.price", is(closeTo(order.getPrice(), 0.01))));
-
+        RestAssuredMockMvc.given()
+                .contentType(ContentType.JSON)
+                .body(order)
+                .when()
+                .post("/api/v1/orders/new")
+                .then()
+                .statusCode(200)
+                .contentType(ContentType.JSON)
+                .body("clientName", equalTo(order.getClientName()))
+                .body("clientEmail", equalTo(order.getClientEmail()))
+                .body("description", equalTo(order.getDescription()))
+                .body("price", equalTo(order.getPrice()));
         // Verify the service method is called
         verify(orderService, times(1)).createOrder(any(Order.class));
     }
@@ -200,16 +206,18 @@ public class OrderControllerTest {
 
         when(orderService.getDeliveryById(orderId)).thenReturn(order1);
         System.out.println("order1: " + order1.getId());
-        mvc.perform(get("/api/v1/orders/{id}", orderId)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.clientName", is(order1.getClientName())))
-                .andExpect(jsonPath("$.clientEmail", is(order1.getClientEmail())))
-                .andExpect(jsonPath("$.description", is(order1.getDescription())))
-                .andExpect(jsonPath("$.price", is(closeTo(order1.getPrice(), 0.01))));
 
-        verify(orderService, times(1)).getDeliveryById(orderId);
+        RestAssuredMockMvc.given()
+                .contentType(ContentType.JSON)
+                .when()
+                .get("/api/v1/orders/{id}", orderId)
+                .then()
+                .statusCode(200)
+                .contentType(ContentType.JSON)
+                .body("clientName", equalTo(order1.getClientName()))
+                .body("clientEmail", equalTo(order1.getClientEmail()))
+                .body("description", equalTo(order1.getDescription()))
+                .body("price", equalTo(order1.getPrice()));
     }
 
     @DisplayName("Get order by id - Not Found")
@@ -219,37 +227,43 @@ public class OrderControllerTest {
 
         when(orderService.getDeliveryById(orderId)).thenReturn(null);
 
-        mvc.perform(get("/api/v1/orders/{id}", orderId)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isNotFound());
+        RestAssuredMockMvc.given()
+                .contentType(ContentType.JSON)
+                .when()
+                .get("/api/v1/orders/{id}", orderId)
+                .then()
+                .statusCode(404);
 
         verify(orderService, times(1)).getDeliveryById(orderId);
     }
 
     @DisplayName("Get orders by pickup point")
     @Test
-    void getOrdersByPickupPoint() throws Exception {
+    void getOrdersByPickupPoint() {
         Integer pickupPointId = 0; //pickupPoint1 ID = 0
 
         when(orderService.getDeliveriesByPickupPointId(pickupPointId)).thenReturn(List.of(order1));
 
-        mvc.perform(get("/api/v1/orders/ppoint/{pickup_point_id}", pickupPointId)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$", hasSize(equalTo(1))))
-                .andExpect(jsonPath("$[0].clientName", is(order1.getClientName())))
-                .andExpect(jsonPath("$[0].clientEmail", is(order1.getClientEmail())))
-                .andExpect(jsonPath("$[0].description", is(order1.getDescription())))
-                .andExpect(jsonPath("$[0].price", is(closeTo(order1.getPrice(), 0.01))));
+        RestAssuredMockMvc.given()
+                .contentType(ContentType.JSON)
+                .when()
+                .get("/api/v1/orders/ppoint/{pickup_point_id}", pickupPointId)
+                .then()
+                .statusCode(200)
+                .contentType(ContentType.JSON)
+                .body("$", hasSize(1))
+                .body("[0].clientName", is(order1.getClientName()))
+                .body("[0].clientEmail", is(order1.getClientEmail()))
+                .body("[0].description", is(order1.getDescription()))
+                .body("[0].price", is(order1.getPrice()));
 
         verify(orderService, times(1)).getDeliveriesByPickupPointId(pickupPointId);
     }
 
 
-    @DisplayName("Update order")
+    @DisplayName("Update order by id")
     @Test
-    void updateOrder() throws Exception {
+    void updateOrder() {
         int orderId = 0;
         String orderStatus = "DELIVERED";
 
@@ -258,17 +272,136 @@ public class OrderControllerTest {
         // Mock the service method
         when(orderService.updateOrder(eq(orderId), eq(orderStatus))).thenReturn(order1);
 
-        // Perform the PUT request
-        mvc.perform(put("/api/v1/orders/update/{id}", orderId)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(orderStatus))
-                .andExpect(status().isOk())
-                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.id", is(order1.getId())))
-                .andExpect(jsonPath("$.status", is(orderStatus)));
+        RestAssuredMockMvc.given()
+                .contentType(ContentType.JSON)
+                .body(orderStatus)
+                .when()
+                .put("/api/v1/orders/update/{id}", orderId)
+                .then()
+                .statusCode(200)
+                .contentType(ContentType.JSON)
+                .body("id", is(order1.getId()))
+                .body("status", is(orderStatus));
 
         // Verify the service method is called
         verify(orderService, times(1)).updateOrder(eq(orderId), eq(orderStatus));
     }
 
+    @DisplayName(("total number of orders"))
+    @Test
+    void getTotalNumberOfOrders() throws Exception {
+        int totalOrders = 3;
+
+        when(orderService.getTotalOrders()).thenReturn(totalOrders);
+
+        RestAssuredMockMvc.given()
+                .contentType(ContentType.JSON)
+                .when()
+                .get("/api/v1/orders/total")
+                .then()
+                .statusCode(200)
+                .contentType(ContentType.JSON)
+                .body(equalTo(String.valueOf(totalOrders)));
+
+        verify(orderService, times(1)).getTotalOrders();
+    }
+
+    @DisplayName("Get total number of ongoing orders")
+    @Test
+    void getTotalNumberOfOngoingOrders() {
+        int totalOngoingOrders = 2;
+
+        when(orderService.getTotalOnGoingOrders()).thenReturn(totalOngoingOrders);
+
+        RestAssuredMockMvc.given()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when()
+                .get("/api/v1/orders/total/on_going")
+                .then()
+                .statusCode(200)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(is(String.valueOf(totalOngoingOrders)));
+
+        verify(orderService, times(1)).getTotalOnGoingOrders();
+    }
+
+    @DisplayName("Get total number of orders from last month")
+    @Test
+    void getTotalOrdersFromLastMonth() {
+        int totalOrdersFromLastMonth = 5;
+
+        when(orderService.getTotalOrdersFromLastMonth()).thenReturn(totalOrdersFromLastMonth);
+
+        RestAssuredMockMvc.given()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when()
+                .get("/api/v1/orders/total/lastmonth")
+                .then()
+                .statusCode(200)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(is(String.valueOf(totalOrdersFromLastMonth)));
+
+        verify(orderService, times(1)).getTotalOrdersFromLastMonth();
+    }
+
+    @DisplayName("Get orders by partner store ID")
+    @Test
+    void getOrdersByPartnerStoreId() {
+        int partnerStoreId = 1;
+
+        when(orderService.getDeliveriesByPartnerStoreId(partnerStoreId)).thenReturn(List.of(order2, order3));
+
+        RestAssuredMockMvc.given()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when()
+                .get("/api/v1/orders/partnerstore/{partner_store_id}", partnerStoreId)
+                .then()
+                .statusCode(200)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body("", hasSize(equalTo(2)))
+                .body("[0].clientName", is(order2.getClientName()))
+                .body("[1].clientName", is(order3.getClientName()));
+
+        verify(orderService, times(1)).getDeliveriesByPartnerStoreId(partnerStoreId);
+    }
+
+    @DisplayName("Get total number of deliveries by partner store ID")
+    @Test
+    void getTotalDeliveriesByPartnerStoreId() throws Exception {
+        int partnerStoreId = 1;
+        int totalDeliveries = 3;
+
+        when(orderService.getTotalDeliveriesByPartnerStoreId(partnerStoreId)).thenReturn(totalDeliveries);
+
+        RestAssuredMockMvc.given()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when()
+                .get("/api/v1/orders/partnerstore/{partner_store_id}/total", partnerStoreId)
+                .then()
+                .statusCode(200)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(is(String.valueOf(totalDeliveries)));
+
+        verify(orderService, times(1)).getTotalDeliveriesByPartnerStoreId(partnerStoreId);
+    }
+
+    @DisplayName("Get total number of ongoing deliveries by partner store ID")
+    @Test
+    void getTotalOngoingDeliveriesByPartnerStoreId() throws Exception {
+        int partnerStoreId = 1;
+        int totalOngoingDeliveries = 2;
+
+        when(orderService.getTotalOnGoingDeliveriesByPartnerStoreId(partnerStoreId)).thenReturn(totalOngoingDeliveries);
+
+        RestAssuredMockMvc.given()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when()
+                .get("/api/v1/orders/partnerstore/{partner_store_id}/total/on_going", partnerStoreId)
+                .then()
+                .statusCode(200)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(is(String.valueOf(totalOngoingDeliveries)));
+
+        verify(orderService, times(1)).getTotalOnGoingDeliveriesByPartnerStoreId(partnerStoreId);
+    }
 }
