@@ -13,7 +13,7 @@ import org.hibernate.annotations.OnDeleteAction;
 import tqs.loadconnect.core_backend.Utils.Enums.PickupPEnum;
 
 import java.util.List;
-
+import java.util.ArrayList;
 
 @Entity
 @Getter @Setter
@@ -49,6 +49,10 @@ public class PickupPoint {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "pickupPoint")
     @JsonIgnoreProperties("pickupPoint")
     private List<Order> orders;
+
+    public PickupPoint() {
+        orders = new ArrayList<>();
+    }
 
     @Override
     public String toString() {

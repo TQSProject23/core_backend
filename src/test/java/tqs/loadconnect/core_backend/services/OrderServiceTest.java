@@ -118,50 +118,33 @@ public class OrderServiceTest {
     @Disabled
     @DisplayName("Test Create order - Valid")
     void testCreateOrderValid() {
-
-        Order order1 = new Order();
-        PartnerStore ps1 = new PartnerStore();
-        ps1.setPs_name("Store 1");
-        ps1.setAddress("Address 1");
-
-        PickupPoint pp1 = new PickupPoint();
-        pp1 = new PickupPoint();
-        pp1.setId(69);
-        pp1.setPp_name("Pickup Point 1");
-        pp1.setAddress("Address 1");
-        pp1.setPartnerStore(ps1);
-        pp1.setOrders(List.of(order1));
-
-        LocalDate d1 = LocalDate.of(2021, 1, 1);
-        LocalDate d2 = LocalDate.of(2021, 1, 2);
-        LocalDate d3 = LocalDate.of(2021, 1, 3);
-
-        // ORDERS
-        order1 = new Order();
-        order1.setId(1);
-        order1.setDescription("Item 1");
-        order1.setPrice(10.9F);
-        order1.setWeight(0.5F);
-        order1.setStatus(OrderStatusEnum.PENDING);
-        order1.setClientName("John Doe");
-        order1.setClientEmail("john@example.com");
-        order1.setPickupPoint(pp1);
-
+        List<Order> orders = Arrays.asList(
+                createOrderWithPartnerStoreId(1),
+                createOrderWithPartnerStoreId(2),
+                createOrderWithPartnerStoreId(3)
+        );
 
         // Mock behavior
-        when(orderRepository.save(order1)).thenReturn(order1);
+        when(orderRepository.save(orders.get(0))).thenReturn(orders.get(0));
+        when(orderRepository.save(orders.get(1))).thenReturn(orders.get(1));
+        when(orderRepository.save(orders.get(2))).thenReturn(orders.get(2));
 
         // Invoke the method
-        Order actualOrder = orderService.createOrder(order1);
+        Order actualOrder1 = orderService.createOrder(orders.get(0));
+        Order actualOrder2 = orderService.createOrder(orders.get(1));
+        Order actualOrder3 = orderService.createOrder(orders.get(2));
 
         // Verify the result
-        assertThat(actualOrder, equalTo(order1));
+        assertThat(actualOrder1, equalTo(orders.get(0)));
+        assertThat(actualOrder2, equalTo(orders.get(1)));
+        assertThat(actualOrder3, equalTo(orders.get(2)));
 
-        verify(orderRepository, times(1)).save(order1);
+        verify(orderRepository, times(1)).save(orders.get(0));
+        verify(orderRepository, times(1)).save(orders.get(1));
+        verify(orderRepository, times(1)).save(orders.get(2));
 
 
     }
-
     @Test
     @DisplayName("Test updateOrder() - Order found")
     void testUpdateOrderOrderFound() {
@@ -258,6 +241,69 @@ public class OrderServiceTest {
         verify(orderRepository, times(1)).findAll();
     }
 
+    @Test
+    @DisplayName("Test getTotalOrdersFromStoreId")
+    void testGetTotalOrdersFromStoreId() {
+        // Mock data
+        int partnerStoreId = 1;
+        List<Order> orders = Arrays.asList(
+                createOrderWithPartnerStoreId(partnerStoreId),
+                createOrderWithPartnerStoreId(partnerStoreId),
+                createOrderWithPartnerStoreId(partnerStoreId + 1)
+        );
+
+        // Mock behavior
+        when(orderRepository.findAll()).thenReturn(orders);
+
+        // Invoke the method
+        Integer totalOrdersFromStoreId = orderService.getTotalOnGoingDeliveriesByPartnerStoreId(partnerStoreId);
+
+        // Verify the result
+        assertThat(totalOrdersFromStoreId, equalTo(2));
+        verify(orderRepository, times(1)).findAll();
+    }
+
+    @Test
+    @DisplayName("Test getOrdersByPartnerStoreId")
+    void testGetOrdersByPartnerStoreId() {
+        // Mock data
+        int partnerStoreId = 1;
+        List<Order> orders = Arrays.asList(
+                createOrderWithPartnerStoreId(partnerStoreId),
+                createOrderWithPartnerStoreId(partnerStoreId),
+                createOrderWithPartnerStoreId(partnerStoreId + 1)
+        );
+
+        // Mock behavior
+        when(orderRepository.findAll()).thenReturn(orders);
+
+        // Invoke the method
+        List<Order> ordersFromStoreId = orderService.getDeliveriesByPartnerStoreId(partnerStoreId);
+
+        // Verify the result
+        assertThat(ordersFromStoreId.size(), equalTo(2));
+        verify(orderRepository, times(1)).findAll();
+    }
+
+    @Test
+    @DisplayName("Test getTotalOnGoingDeliveriesByPartnerStoreId ")
+    void testGetTotalOnGoingDeliveriesByPartnerStoreId() {
+        // Mock data
+        int partnerStoreId = 1;
+        List<Order> orders = Arrays.asList(
+                createOrderWithPartnerStoreId(partnerStoreId),
+                createOrderWithPartnerStoreId(partnerStoreId),
+                createOrderWithPartnerStoreId(partnerStoreId + 1)
+        );
+
+        when(orderRepository.findAll()).thenReturn(orders);
+
+        Integer totalOnGoingDeliveriesByPartnerStoreId = orderService.getTotalOnGoingDeliveriesByPartnerStoreId(partnerStoreId);
+
+        assertThat(totalOnGoingDeliveriesByPartnerStoreId, equalTo(2));
+        verify(orderRepository, times(1)).findAll();
+    }
+
     private @NotNull Order createOrderWithStatus(OrderStatusEnum status) {
         Order order = new Order();
         order.setStatus(status);
@@ -266,9 +312,12 @@ public class OrderServiceTest {
 
     private @NotNull Order createOrderWithPartnerStoreId(int partnerStoreId) {
         PickupPoint pickupPoint = new PickupPoint();
+        // set a partner store to the pickup point
+        pickupPoint.setPartnerStore(new PartnerStore());
         pickupPoint.getPartnerStore().setId(partnerStoreId);
         Order order = new Order();
         order.setPickupPoint(pickupPoint);
+        order.setStatus(OrderStatusEnum.IN_TRANSIT);
         return order;
     }
 }

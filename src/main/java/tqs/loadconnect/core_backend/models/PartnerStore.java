@@ -11,11 +11,10 @@ import java.time.LocalDate;
 import java.util.List;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-
+import java.util.ArrayList;
 @Entity
 @Getter @Setter
 @AllArgsConstructor
-@NoArgsConstructor
 @Table(name = "partner_store")
 @JsonIdentityInfo(
         generator = ObjectIdGenerators.PropertyGenerator.class,
@@ -44,6 +43,10 @@ public class PartnerStore {   // PartnerStore is a user from the store
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "partnerStore")
     @JsonIgnoreProperties("partnerStore")
     private List<PickupPoint> pickupPoints;
+
+    public PartnerStore() {
+        pickupPoints = new ArrayList<>();
+    }
 
     @Override
     public String toString() {
