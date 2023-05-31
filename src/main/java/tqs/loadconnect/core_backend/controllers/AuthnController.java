@@ -11,7 +11,7 @@ import tqs.loadconnect.core_backend.models.UserRegistDTO;
 import tqs.loadconnect.core_backend.services.AuthnService;
 
 
-@CrossOrigin(origins = "*") // NOSONAR
+@CrossOrigin(origins = "*")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/authn")
