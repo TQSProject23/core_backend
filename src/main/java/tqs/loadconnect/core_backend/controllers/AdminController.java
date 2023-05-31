@@ -12,7 +12,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/admin")
-@CrossOrigin
+@CrossOrigin(origins = "*")
 @RequiredArgsConstructor
 public class AdminController {
 
