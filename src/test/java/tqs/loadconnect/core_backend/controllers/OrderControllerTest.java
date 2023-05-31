@@ -16,6 +16,7 @@ import tqs.loadconnect.core_backend.models.PartnerStore;
 import tqs.loadconnect.core_backend.models.PickupPoint;
 import tqs.loadconnect.core_backend.services.OrderService;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -93,14 +94,19 @@ public class OrderControllerTest {
         pickupPoint4.setAddress("Address 4");
         pickupPoint4.setPartnerStore(partnerStore3);
 
+        LocalDate d1 = LocalDate.parse("2020-01-08");
+        LocalDate d2 = LocalDate.parse("2020-01-09");
+        LocalDate d3 = LocalDate.parse("2020-01-10");
+
+
         // ORDERS
         order1 = new Order();
         order1.setDescription("Item 1");
         order1.setPrice(10.99f);
         order1.setWeight(0.5f);
-        order1.setDateOrdered(new Date());
-        order1.setExpectedDeliveryDate(new Date());
-        order1.setPickup_date(new Date());
+        order1.setDateOrdered(d1);
+        order1.setExpectedDeliveryDate(d2);
+        order1.setPickup_date(d3);
         order1.setStatus(OrderStatusEnum.PENDING);
         order1.setClientName("John Doe");
         order1.setClientEmail("john@example.com");
@@ -110,9 +116,9 @@ public class OrderControllerTest {
         order2.setDescription("Item 2");
         order2.setPrice(19.99f);
         order2.setWeight(1.2f);
-        order2.setDateOrdered(new Date());
-        order2.setExpectedDeliveryDate(new Date());
-        order2.setPickup_date(new Date());
+        order2.setDateOrdered(d1);
+        order2.setExpectedDeliveryDate(d2);
+        order2.setPickup_date(d3);
         order2.setStatus(OrderStatusEnum.IN_TRANSIT);
         order2.setClientName("Jane Smith");
         order2.setClientEmail("jane@example.com");
@@ -122,9 +128,9 @@ public class OrderControllerTest {
         order3.setDescription("Item 3");
         order3.setPrice(5.99f);
         order3.setWeight(0.3f);
-        order3.setDateOrdered(new Date());
-        order3.setExpectedDeliveryDate(new Date());
-        order3.setPickup_date(new Date());
+        order3.setDateOrdered(d1);
+        order3.setExpectedDeliveryDate(d2);
+        order3.setPickup_date(d3);
         order3.setStatus(OrderStatusEnum.DELIVERED);
         order3.setClientName("Alice Johnson");
         order3.setClientEmail("alice@example.com");
