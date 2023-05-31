@@ -37,7 +37,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 
 @WebMvcTest(OrderController.class)
-@AutoConfigureMockMvc
+@AutoConfigureMockMvc(addFilters = false)
 public class OrderControllerTest {
 
     @Autowired
@@ -94,9 +94,9 @@ public class OrderControllerTest {
         pickupPoint4.setAddress("Address 4");
         pickupPoint4.setPartnerStore(partnerStore3);
 
-        LocalDate d1 = LocalDate.parse("2020-01-08");
-        LocalDate d2 = LocalDate.parse("2020-01-09");
-        LocalDate d3 = LocalDate.parse("2020-01-10");
+        LocalDate d1 = LocalDate.of(2021, 1, 1);
+        LocalDate d2 = LocalDate.of(2021, 1, 2);
+        LocalDate d3 = LocalDate.of(2021, 1, 3);
 
 
         // ORDERS
