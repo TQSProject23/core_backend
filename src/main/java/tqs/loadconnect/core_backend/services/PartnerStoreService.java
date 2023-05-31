@@ -2,6 +2,7 @@ package tqs.loadconnect.core_backend.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import tqs.loadconnect.core_backend.Utils.Enums.PickupPEnum;
 import tqs.loadconnect.core_backend.models.PartnerStore;
 import tqs.loadconnect.core_backend.models.PickupPoint;
 import tqs.loadconnect.core_backend.repositories.PartnerStoreRepository;
@@ -54,7 +55,27 @@ public class PartnerStoreService {
         return partnerStoreRepository.findAll().size();
     }
 
-    // get partner store by name ???
-    // ??
+    public Integer getNumberOfPickupPointsByPartnerStoreId(Integer storeId) {
+        PartnerStore store = partnerStoreRepository.findById((long) storeId).orElse(null);
+        if (store == null) {
+            return null;
+        }
+        List<PickupPoint> pickupPoints = store.getPickupPoints();
+        pickupPoints.removeIf(pickupPoint -> pickupPoint.getPp_status() != PickupPEnum.ACCEPTED);
+        return pickupPoints.size();
+    }
 
+    public PartnerStore getStoreByEmail(String email) {
+        return partnerStoreRepository.findByEmail(email);
+    }
+
+    public Integer getNumberOfPendingPickupPointsByPartnerStoreId(Integer storeId) {
+        PartnerStore store = partnerStoreRepository.findById((long) storeId).orElse(null);
+        if (store == null) {
+            return null;
+        }
+        List<PickupPoint> pickupPoints = store.getPickupPoints();
+        pickupPoints.removeIf(pickupPoint -> pickupPoint.getPp_status() != PickupPEnum.PENDING);
+        return pickupPoints.size();
+    }
 }

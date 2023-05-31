@@ -16,10 +16,8 @@ import java.util.List;
 @RequestMapping("/api/v1/orders")
 public class OrderController {
 
-
     @Autowired
     private OrderService orderService;
-
 
     private PickupPointService pickupPointService;
 
@@ -82,6 +80,39 @@ public class OrderController {
             return ResponseEntity.notFound().build();
         } else {
             return ResponseEntity.ok().body(orders);
+        }
+    }
+
+    // get all orders by partner store
+    @GetMapping("/partnerstore/{partner_store_id}")
+    public ResponseEntity<List<Order>> getDeliveriesByPartnerStoreId(@PathVariable(value="partner_store_id") Integer partnerStoreId) {
+            List<Order> orders = orderService.getDeliveriesByPartnerStoreId(partnerStoreId);
+        if (orders == null) {
+            return ResponseEntity.notFound().build();
+        } else {
+            return ResponseEntity.ok().body(orders);
+        }
+    }
+
+    // get number of orders by partner store email
+    @GetMapping("/partnerstore/{partner_store_id}/total")
+    public ResponseEntity<Integer> getTotalDeliveriesByPartnerStoreId(@PathVariable(value="partner_store_id") Integer partnerStoreId) {
+        Integer totalOrders = orderService.getTotalDeliveriesByPartnerStoreId(partnerStoreId);
+        if (totalOrders == null) {
+            return ResponseEntity.notFound().build();
+        } else {
+            return ResponseEntity.ok().body(totalOrders);
+        }
+    }
+
+    // get number of orders by partner store that are either PENDING or IN_TRANSIT
+    @GetMapping("/partnerstore/{partner_store_id}/total/on_going")
+    public ResponseEntity<Integer> getTotalOnGoingDeliveriesByPartnerStoreId(@PathVariable(value="partner_store_id") Integer partnerStoreId) {
+        Integer totalOnGoingOrders = orderService.getTotalOnGoingDeliveriesByPartnerStoreId(partnerStoreId);
+        if (totalOnGoingOrders == null) {
+            return ResponseEntity.notFound().build();
+        } else {
+            return ResponseEntity.ok().body(totalOnGoingOrders);
         }
     }
 

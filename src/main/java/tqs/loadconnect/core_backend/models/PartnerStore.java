@@ -9,7 +9,8 @@ import lombok.*;
 
 import java.time.LocalDate;
 import java.util.List;
-
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Entity
 @Getter @Setter
@@ -25,8 +26,14 @@ public class PartnerStore {   // PartnerStore is a user from the store
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
 
+    @Column(name = "email")
+    private String email;
+
     @Column(name = "ps_name")
     private String ps_name;
+
+    @Column(name = "ps_password")
+    private String ps_password;
 
     @Column(name = "address")
     private String address; //remove if maintain list
@@ -49,5 +56,15 @@ public class PartnerStore {   // PartnerStore is a user from the store
 
     public void addPickupPoint(PickupPoint pickupPoint) {
         pickupPoints.add(pickupPoint);
+    }
+
+    public void setPassword(String password) {
+        PasswordEncoder encoder = new BCryptPasswordEncoder();
+        this.ps_password = encoder.encode(password);
+    }
+
+    public boolean comparePassword(String password) {
+        PasswordEncoder encoder = new BCryptPasswordEncoder();
+        return encoder.matches(password, this.ps_password);
     }
 }
