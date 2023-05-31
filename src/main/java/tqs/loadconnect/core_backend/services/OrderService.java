@@ -10,6 +10,7 @@ import tqs.loadconnect.core_backend.models.PickupPoint;
 import tqs.loadconnect.core_backend.repositories.OrderRepository;
 import tqs.loadconnect.core_backend.repositories.PickupPRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -84,8 +85,14 @@ public class OrderService {
 
     public List<Order> getDeliveriesByPartnerStoreId(Integer partnerStoreId) {
         List<Order> allOrders = orderRepository.findAll();
-        allOrders.removeIf(order -> order.getPickupPoint().getPartnerStore().getId() != partnerStoreId);
-        return allOrders;
+        List<Order> final_lst = new ArrayList<>();
+        // allOrders.removeIf(order -> order.getPickupPoint().getPartnerStore().getId() != partnerStoreId);
+        for (Order order : allOrders) {
+            if (order.getPickupPoint().getPartnerStore().getId() == partnerStoreId) {
+                final_lst.add(order);
+            }
+        }
+        return final_lst;
     }
 
     public Integer getTotalDeliveriesByPartnerStoreId(Integer partnerStoreId) {
@@ -96,12 +103,14 @@ public class OrderService {
 
     public Integer getTotalOnGoingDeliveriesByPartnerStoreId(Integer partnerStoreId) {
         List<Order> allOrders = orderRepository.findAll();
-        allOrders.removeIf(order -> order.getPickupPoint().getPartnerStore().getId() != partnerStoreId);
+
         int count = 0;
         for (Order order : allOrders) {
             OrderStatusEnum status = order.getStatus();
-            if (status == OrderStatusEnum.IN_TRANSIT || status == OrderStatusEnum.PENDING) {
-                count++;
+            if (order.getPickupPoint().getPartnerStore().getId() == partnerStoreId) {
+                if (status == OrderStatusEnum.IN_TRANSIT || status == OrderStatusEnum.PENDING) {
+                    count++;
+                }
             }
         }
         return count;
