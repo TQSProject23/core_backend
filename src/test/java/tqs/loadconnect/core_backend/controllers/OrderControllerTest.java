@@ -1,6 +1,7 @@
 package tqs.loadconnect.core_backend.controllers;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -165,7 +166,7 @@ public class OrderControllerTest {
         verify(orderService, times(1)).getAllDeliveries();
     }
 
-    @DisplayName("Create new order")
+    @DisplayName("Create new order - valid")
     @Test
     void createNewOrder() throws Exception {
         // Create a sample order
@@ -198,6 +199,28 @@ public class OrderControllerTest {
         // Verify the service method is called
         verify(orderService, times(1)).createOrder(any(Order.class));
     }
+
+    @DisplayName("Create new order - invalid")
+    @Test
+    void createNewOrderInvalid() throws Exception {
+        // Create a sample order
+        Order order = new Order();
+
+        // Mock the service method
+        when(orderService.createOrder(any(Order.class))).thenReturn(null);
+
+        // Perform the POST request
+        RestAssuredMockMvc.given()
+                .contentType(ContentType.JSON)
+                .body(order)
+                .when()
+                .post("/api/v1/orders/new")
+                .then()
+                .statusCode(400);
+        // Verify the service method is called
+        verify(orderService, times(1)).createOrder(any(Order.class));
+    }
+
 
     @DisplayName("Get order by id")
     @Test
@@ -260,6 +283,23 @@ public class OrderControllerTest {
         verify(orderService, times(1)).getDeliveriesByPickupPointId(pickupPointId);
     }
 
+    @DisplayName("Get orders by pickup point - Not Found")
+    @Test
+    void getOrdersByPickupPointNotFound() {
+        Integer pickupPointId = 9999;
+
+        when(orderService.getDeliveriesByPickupPointId(pickupPointId)).thenReturn(null);
+
+        RestAssuredMockMvc.given()
+                .contentType(ContentType.JSON)
+                .when()
+                .get("/api/v1/orders/ppoint/{pickup_point_id}", pickupPointId)
+                .then()
+                .statusCode(404);
+
+        verify(orderService, times(1)).getDeliveriesByPickupPointId(pickupPointId);
+    }
+
 
     @DisplayName("Update order by id")
     @Test
@@ -282,6 +322,27 @@ public class OrderControllerTest {
                 .contentType(ContentType.JSON)
                 .body("id", is(order1.getId()))
                 .body("status", is(orderStatus));
+
+        // Verify the service method is called
+        verify(orderService, times(1)).updateOrder(eq(orderId), eq(orderStatus));
+    }
+
+    @DisplayName("Update order by id - Not Found")
+    @Test
+    void updateOrderNotFound() {
+        int orderId = 9999;
+        String orderStatus = "DELIVERED";
+
+        // Mock the service method
+        when(orderService.updateOrder(eq(orderId), eq(orderStatus))).thenReturn(null);
+
+        RestAssuredMockMvc.given()
+                .contentType(ContentType.JSON)
+                .body(orderStatus)
+                .when()
+                .put("/api/v1/orders/update/{id}", orderId)
+                .then()
+                .statusCode(404);
 
         // Verify the service method is called
         verify(orderService, times(1)).updateOrder(eq(orderId), eq(orderStatus));
@@ -365,6 +426,23 @@ public class OrderControllerTest {
         verify(orderService, times(1)).getDeliveriesByPartnerStoreId(partnerStoreId);
     }
 
+    @DisplayName("Get orders by partner store ID - Not Found")
+    @Test
+    void getOrdersByPartnerStoreIdNotFound() {
+        int partnerStoreId = 9999;
+
+        when(orderService.getDeliveriesByPartnerStoreId(partnerStoreId)).thenReturn(null);
+
+        RestAssuredMockMvc.given()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when()
+                .get("/api/v1/orders/partnerstore/{partner_store_id}", partnerStoreId)
+                .then()
+                .statusCode(404);
+
+        verify(orderService, times(1)).getDeliveriesByPartnerStoreId(partnerStoreId);
+    }
+
     @DisplayName("Get total number of deliveries by partner store ID")
     @Test
     void getTotalDeliveriesByPartnerStoreId() throws Exception {
@@ -385,6 +463,23 @@ public class OrderControllerTest {
         verify(orderService, times(1)).getTotalDeliveriesByPartnerStoreId(partnerStoreId);
     }
 
+    @DisplayName("Get total number of deliveries by partner store ID - Not Found")
+    @Test
+    void getTotalDeliveriesByPartnerStoreIdNotFound() throws Exception {
+        int partnerStoreId = 9999;
+
+        when(orderService.getTotalDeliveriesByPartnerStoreId(partnerStoreId)).thenReturn(null);
+
+        RestAssuredMockMvc.given()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when()
+                .get("/api/v1/orders/partnerstore/{partner_store_id}/total", partnerStoreId)
+                .then()
+                .statusCode(404);
+
+        verify(orderService, times(1)).getTotalDeliveriesByPartnerStoreId(partnerStoreId);
+    }
+
     @DisplayName("Get total number of ongoing deliveries by partner store ID")
     @Test
     void getTotalOngoingDeliveriesByPartnerStoreId() throws Exception {
@@ -401,6 +496,23 @@ public class OrderControllerTest {
                 .statusCode(200)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(is(String.valueOf(totalOngoingDeliveries)));
+
+        verify(orderService, times(1)).getTotalOnGoingDeliveriesByPartnerStoreId(partnerStoreId);
+    }
+
+    @DisplayName("Get total number of ongoing deliveries by partner store ID - Not Found")
+    @Test
+    void getTotalOngoingDeliveriesByPartnerStoreIdNotFound() throws Exception {
+        int partnerStoreId = 9999;
+
+        when(orderService.getTotalOnGoingDeliveriesByPartnerStoreId(partnerStoreId)).thenReturn(null);
+
+        RestAssuredMockMvc.given()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when()
+                .get("/api/v1/orders/partnerstore/{partner_store_id}/total/on_going", partnerStoreId)
+                .then()
+                .statusCode(404);
 
         verify(orderService, times(1)).getTotalOnGoingDeliveriesByPartnerStoreId(partnerStoreId);
     }
