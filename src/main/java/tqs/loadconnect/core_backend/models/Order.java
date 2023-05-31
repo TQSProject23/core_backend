@@ -11,6 +11,7 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import tqs.loadconnect.core_backend.Utils.Enums.OrderStatusEnum;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 @Entity
@@ -38,13 +39,13 @@ public class Order {
     private float weight;
 
     @Column(name = "date_ordered")
-    private Date dateOrdered;
+    private LocalDate dateOrdered;
 
     @Column(name = "expected_delivery_date")
-    private Date expectedDeliveryDate;
+    private LocalDate expectedDeliveryDate;
 
     @Column(name = "pickup_date")
-    private Date pickup_date;
+    private LocalDate pickup_date;
 
     @Column(name = "status")
     private OrderStatusEnum status; // PENDING, IN_TRANSIT, DELIVERED, CANCELLED

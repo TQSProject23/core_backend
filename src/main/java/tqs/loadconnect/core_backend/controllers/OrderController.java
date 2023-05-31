@@ -35,6 +35,26 @@ public class OrderController {
         }
     }
 
+    // return total number of orders
+    @GetMapping("/total")
+    public ResponseEntity<Integer> getTotalOrders() {
+        Integer totalOrders = orderService.getTotalOrders();
+        return ResponseEntity.ok().body(totalOrders);
+    }
+
+    // return total number of orders that are either PENDING or IN_TRANSIT
+    @GetMapping("/total/on_going")
+    public ResponseEntity<Integer> getTotalOnGoingOrders() {
+        Integer totalOnGoingOrders = orderService.getTotalOnGoingOrders();
+        return ResponseEntity.ok().body(totalOnGoingOrders);
+    }
+
+    // return number of orders from last month
+    @GetMapping("/total/lastmonth")
+    public ResponseEntity<Integer> getTotalOrdersFromLastMonth() {
+        Integer totalOrdersFromLastMonth = orderService.getTotalOrdersFromLastMonth();
+        return ResponseEntity.ok().body(totalOrdersFromLastMonth);
+    }
 
     // get all orders
     @GetMapping("/all")

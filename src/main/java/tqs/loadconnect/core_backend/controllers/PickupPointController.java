@@ -3,6 +3,7 @@ package tqs.loadconnect.core_backend.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import tqs.loadconnect.core_backend.models.Order;
 import tqs.loadconnect.core_backend.models.PartnerStore;
 import tqs.loadconnect.core_backend.models.PickupPoint;
 import tqs.loadconnect.core_backend.services.PickupPointService;
@@ -11,7 +12,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/pps")
-@CrossOrigin
+@CrossOrigin(origins="*")
 public class PickupPointController {
 
     @Autowired private PickupPointService pickupPointService;
@@ -27,6 +28,18 @@ public class PickupPointController {
             return ResponseEntity.ok().body(newPickupPoint);
         }
     }
+
+    // get pickup point by ID
+    @GetMapping("/{id}")
+    public ResponseEntity<PickupPoint> getPickupPointByID(@PathVariable(value="id") Integer ppId) {
+        PickupPoint pp = pickupPointService.getDeliveryById(ppId);
+        if (pp == null) {
+            return ResponseEntity.notFound().build();
+        } else {
+            return ResponseEntity.ok().body(pp);
+        }
+    }
+
 
     // update a pickup point status
     @PutMapping("/update/{id}")
@@ -50,7 +63,6 @@ public class PickupPointController {
         }
     }
 
-
     // get all pickup points by city
     @GetMapping("/city/{city}")
     public ResponseEntity<List<PickupPoint>> getAllPickupPointsByCity(@PathVariable(value="city") String city) {
@@ -62,6 +74,39 @@ public class PickupPointController {
         }
     }
 
+    // get all orders by pickup point
+    @GetMapping("/orders/{id}")
+    public ResponseEntity<List<Order>> getAllOrdersByPickupPoint(@PathVariable(value="id") int pickupPointId) {
+        List<Order> orders = pickupPointService.getAllOrdersByPickupPoint(pickupPointId);
+        if (orders == null) {
+            return ResponseEntity.notFound().build();
+        } else {
+            return ResponseEntity.ok().body(orders);
+        }
+    }
+
+
+    // return total number of pickup points
+    @GetMapping("/total")
+    public ResponseEntity<Integer> countPickupPoints() {
+        int count = pickupPointService.countPickupPoints();
+        if (count == 0) {
+            return ResponseEntity.notFound().build();
+        } else {
+            return ResponseEntity.ok().body(count);
+        }
+    }
+
+    // return total number of pickup points last month
+    @GetMapping("/total/lastmonth")
+    public ResponseEntity<Integer> countPickupPointsLastMonth() {
+        int count = pickupPointService.countPickupPointsLastMonth();
+        if (count == 0) {
+            return ResponseEntity.notFound().build();
+        } else {
+            return ResponseEntity.ok().body(count);
+        }
+    }
 
 
 }

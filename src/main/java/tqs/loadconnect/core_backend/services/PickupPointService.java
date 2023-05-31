@@ -4,6 +4,7 @@ package tqs.loadconnect.core_backend.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tqs.loadconnect.core_backend.Utils.Enums.PickupPEnum;
+import tqs.loadconnect.core_backend.models.Order;
 import tqs.loadconnect.core_backend.models.PartnerStore;
 import tqs.loadconnect.core_backend.models.PickupPoint;
 import tqs.loadconnect.core_backend.repositories.PickupPRepository;
@@ -59,5 +60,26 @@ public class PickupPointService {
         PickupPEnum ppStatusEnum = PickupPEnum.valueOf(ppStatus);
         pickupPoint.setPp_status(ppStatusEnum);
         return pickupPRepository.save(pickupPoint);
+    }
+
+    public int countPickupPoints() {
+        return pickupPRepository.findAll().size();
+    }
+
+    public int countPickupPointsLastMonth() {
+        // TODO: implement this correctly
+        return pickupPRepository.findAll().size();
+    }
+
+    public PickupPoint getDeliveryById(Integer ppId) {
+        return pickupPRepository.findById((long) ppId).orElse(null);
+    }
+
+    public List<Order> getAllOrdersByPickupPoint(int pickupPointId) {
+        PickupPoint pickupPoint = pickupPRepository.findById((long) pickupPointId).orElse(null);
+        if (pickupPoint == null) {
+            return null;
+        }
+        return pickupPoint.getOrders();
     }
 }

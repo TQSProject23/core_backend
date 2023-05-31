@@ -46,6 +46,14 @@ public class PartnerStoreService {
         return store.getPickupPoints();
     }
 
+    public Integer getTotalPartnerStores() {
+        return partnerStoreRepository.findAll().size();
+    }
+
+    public Integer getTotalPartnerStoresLastMonth() {
+        return partnerStoreRepository.findAll().size();
+    }
+
     // get partner store by name ???
     // ??
 

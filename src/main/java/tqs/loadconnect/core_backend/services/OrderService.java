@@ -61,5 +61,23 @@ public class OrderService {
         return orderRepository.save(order);
     }
 
+    public Integer getTotalOrders() {
+        return orderRepository.findAll().size();
+    }
 
+    public Integer getTotalOnGoingOrders() {
+        List<Order> orders = orderRepository.findAll();
+        int count = 0;
+        for (Order order : orders) {
+            OrderStatusEnum status = order.getStatus();
+            if (status == OrderStatusEnum.IN_TRANSIT || status == OrderStatusEnum.PENDING) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    public Integer getTotalOrdersFromLastMonth() {
+        return orderRepository.findAll().size();
+    }
 }
