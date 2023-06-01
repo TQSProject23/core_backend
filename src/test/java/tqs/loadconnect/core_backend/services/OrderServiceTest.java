@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.hamcrest.Matchers.*;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 
@@ -321,6 +322,59 @@ public class OrderServiceTest {
 
         assertThat(totalDeliveriesByPartnerStoreId, equalTo(2));
         verify(orderRepository, times(1)).findAll();
+    }
+
+    @Test
+    @DisplayName("Test getDeliveriesByClientEmail - Return deliveries for valid client email")
+    void testGetDeliveriesByClientEmailValid() {
+        String validEmail = "test@example.com";
+
+        Order order1 = new Order();
+        order1.setClientEmail(validEmail);
+
+        Order order2 = new Order();
+        order2.setClientEmail("other@example.com");
+
+        Order order3 = new Order();
+        order3.setClientEmail(validEmail);
+
+        List<Order> allOrders = new ArrayList<>();
+        allOrders.add(order1);
+        allOrders.add(order2);
+        allOrders.add(order3);
+
+        when(orderRepository.findAll()).thenReturn(allOrders);
+
+        List<Order> result = orderService.getDeliveriesByClientEmail(validEmail);
+
+        assertNotNull(result);
+        assertEquals(2, result.size());
+        assertTrue(result.contains(order1));
+        assertTrue(result.contains(order3));
+    }
+
+
+    @Test
+    @DisplayName("Test getDeliveriesByClientEmail - Return empty list for invalid client email")
+    void testGetDeliveriesByClientEmailInvalid() {
+        String invalidEmail = "invalid@example.com";
+
+        Order order1 = new Order();
+        order1.setClientEmail("test@example.com");
+
+        Order order2 = new Order();
+        order2.setClientEmail("other@example.com");
+
+        List<Order> allOrders = new ArrayList<>();
+        allOrders.add(order1);
+        allOrders.add(order2);
+
+        when(orderRepository.findAll()).thenReturn(allOrders);
+
+        List<Order> result = orderService.getDeliveriesByClientEmail(invalidEmail);
+
+        assertNotNull(result);
+        assertTrue(result.isEmpty());
     }
 
 
