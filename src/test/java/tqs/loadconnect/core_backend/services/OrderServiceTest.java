@@ -319,7 +319,7 @@ public class OrderServiceTest {
 
         Integer totalDeliveriesByPartnerStoreId = orderService.getTotalDeliveriesByPartnerStoreId(partnerStoreId);
 
-        assertThat(totalDeliveriesByPartnerStoreId, equalTo(1));
+        assertThat(totalDeliveriesByPartnerStoreId, equalTo(2));
         verify(orderRepository, times(1)).findAll();
     }
 

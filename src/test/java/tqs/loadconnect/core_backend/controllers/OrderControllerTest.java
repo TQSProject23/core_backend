@@ -18,14 +18,16 @@ import tqs.loadconnect.core_backend.models.PickupPoint;
 import tqs.loadconnect.core_backend.services.OrderService;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.Matchers.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
+
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasSize;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -515,5 +517,51 @@ public class OrderControllerTest {
                 .statusCode(404);
 
         verify(orderService, times(1)).getTotalOnGoingDeliveriesByPartnerStoreId(partnerStoreId);
+    }
+
+    @DisplayName("Get all orders by client email")
+    @Test
+    void getOrdersByClientEmailTest() {
+        List<Order> orders = new ArrayList<>();
+        Order order4= new Order();
+        order4.setId(4);
+        order4.setClientEmail("teste@gmail.com");
+
+        Order order5= new Order();
+        order5.setId(5);
+        order5.setClientEmail("teste@gmail.com");
+
+        orders.add(order4);
+        orders.add(order5);
+
+        when(orderService.getDeliveriesByClientEmail(anyString())).thenReturn(orders);
+
+        RestAssuredMockMvc.given()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when()
+                .get("/api/v1/orders/user/{client_email}", "teste@gmail.com")
+                .then()
+                .statusCode(200)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body("", hasSize(equalTo(2)))
+                .body("[0].id", is(order4.getId()))
+                .body("[1].id", is(order5.getId()));
+
+        verify(orderService, times(1)).getDeliveriesByClientEmail(anyString());
+    }
+
+    @DisplayName("Get all orders by client email - Not Found")
+    @Test
+    void getOrdersByClientEmailNotFoundTest() {
+        when(orderService.getDeliveriesByClientEmail(anyString())).thenReturn(null);
+
+        RestAssuredMockMvc.given()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when()
+                .get("/api/v1/orders/user/{client_email}", "teste@gmail.com")
+                .then()
+                .statusCode(404);
+
+        verify(orderService, times(1)).getDeliveriesByClientEmail(anyString());
     }
 }
