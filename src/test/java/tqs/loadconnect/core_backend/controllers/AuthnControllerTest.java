@@ -41,11 +41,7 @@ public class AuthnControllerTest {
     @DisplayName("Register PartnerStore - Success")
     @Test
     void registerPartnerStoreSuccess() throws Exception {
-        PartnerStoreRegistDTO partnerStoreRegistDTO = new PartnerStoreRegistDTO();
-        partnerStoreRegistDTO.setPs_name("Teste");
-        partnerStoreRegistDTO.setEmail("teste1@gamil.com");
-        partnerStoreRegistDTO.setPs_password("123456");
-        partnerStoreRegistDTO.setAddress("Rua do teste");
+        PartnerStoreRegistDTO partnerStoreRegistDTO = new PartnerStoreRegistDTO("Teste","teste1@gmail.com","123456","Rua do teste");
 
         when(authnService.registerPartnerStore(any(PartnerStoreRegistDTO.class))).thenReturn(true);
 
@@ -90,14 +86,10 @@ public class AuthnControllerTest {
     @Test
     void loginPartnerStoreSuccess() {
         // Prepare the request body
-        PartnerStoreLoginDTO loginDTO = new PartnerStoreLoginDTO();
-        loginDTO.setEmail("hello@gmail.com");
-        loginDTO.setPs_password("123456");
+        PartnerStoreLoginDTO loginDTO = new PartnerStoreLoginDTO("hello@gmail.com","123456");
 
-        PartnerStoreDTO partnerStoreDTO = new PartnerStoreDTO();
-        partnerStoreDTO.setPs_name("Teste");
-        partnerStoreDTO.setEmail("hello@gmail.com");
-        partnerStoreDTO.setAddress("Rua do teste");
+        PartnerStoreDTO partnerStoreDTO = new PartnerStoreDTO(0,"Teste","hello@gmail.com","Rua do teste");
+
 
         // Mock the service method
         when(authnService.loginPartnerStore(any(PartnerStoreLoginDTO.class))).thenReturn(partnerStoreDTO);
