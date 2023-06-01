@@ -15,6 +15,7 @@ import tqs.loadconnect.core_backend.repositories.OrderRepository;
 import tqs.loadconnect.core_backend.repositories.PickupPRepository;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -115,7 +116,6 @@ public class OrderServiceTest {
     }
 
     @Test
-    @Disabled
     @DisplayName("Test Create order - Valid")
     void testCreateOrderValid() {
         List<Order> orders = Arrays.asList(
@@ -303,6 +303,26 @@ public class OrderServiceTest {
         assertThat(totalOnGoingDeliveriesByPartnerStoreId, equalTo(2));
         verify(orderRepository, times(1)).findAll();
     }
+
+    @Test
+    @DisplayName("Test getTotalDeliveriesByPartnerStoreId - Return total deliveries by partner store ID")
+    void testGetTotalDeliveriesByPartnerStoreId() {
+        // Mock data
+        int partnerStoreId = 1;
+        List<Order> orders = Arrays.asList(
+                createOrderWithPartnerStoreId(partnerStoreId),
+                createOrderWithPartnerStoreId(partnerStoreId),
+                createOrderWithPartnerStoreId(partnerStoreId + 1)
+        );
+
+        when(orderRepository.findAll()).thenReturn(orders);
+
+        Integer totalDeliveriesByPartnerStoreId = orderService.getTotalDeliveriesByPartnerStoreId(partnerStoreId);
+
+        assertThat(totalDeliveriesByPartnerStoreId, equalTo(1));
+        verify(orderRepository, times(1)).findAll();
+    }
+
 
     private @NotNull Order createOrderWithStatus(OrderStatusEnum status) {
         Order order = new Order();

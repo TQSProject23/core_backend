@@ -1,9 +1,8 @@
 package tqs.loadconnect.core_backend.services;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import lombok.RequiredArgsConstructor;
 import tqs.loadconnect.core_backend.Utils.Enums.OrderStatusEnum;
 import tqs.loadconnect.core_backend.models.Order;
 import tqs.loadconnect.core_backend.models.PickupPoint;
@@ -13,13 +12,14 @@ import tqs.loadconnect.core_backend.repositories.PickupPRepository;
 import java.util.ArrayList;
 import java.util.List;
 
-@RequiredArgsConstructor
 @Service
+@RequiredArgsConstructor
 public class OrderService {
-
+    
     private final OrderRepository orderRepository;
 
     private final PickupPRepository pickupPRepository;
+
 
     // get all orders
     public List<Order> getAllDeliveries() {
@@ -37,18 +37,7 @@ public class OrderService {
     }
 
     public Order createOrder(Order order) {
-        System.out.println(order.toString());
-        System.out.println("PP:" + order.getPickupPoint());
-        // verify if order already exists
-        Order orderx = orderRepository.findById(order.getPickupPoint().getId()).orElse(null);
-        if (orderx != null) {
-            return null;
-        }
-
-        PickupPoint pp = pickupPRepository.findById((long) order.getPickupPoint().getId()).orElse(null);
-        assert pp != null;
-        pp.addOrder(order);
-        System.out.println("PP final:" + pp);
+        order.getPickupPoint().addOrder(order);
         return orderRepository.save(order);
     }
 
@@ -97,8 +86,13 @@ public class OrderService {
 
     public Integer getTotalDeliveriesByPartnerStoreId(Integer partnerStoreId) {
         List<Order> allOrders = orderRepository.findAll();
-        allOrders.removeIf(order -> order.getPickupPoint().getPartnerStore().getId() != partnerStoreId);
-        return allOrders.size();
+        List<Order> final_lst = new ArrayList<>();
+        for (Order order : allOrders) {
+            if (order.getPickupPoint().getPartnerStore().getId() != partnerStoreId) {
+                final_lst.add(order);
+            }
+        }
+        return final_lst.size();
     }
 
     public Integer getTotalOnGoingDeliveriesByPartnerStoreId(Integer partnerStoreId) {
