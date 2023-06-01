@@ -49,6 +49,7 @@ public class OrderService {
             Thread.sleep(15000);
         } catch (InterruptedException e) {
             e.printStackTrace();
+            Thread.currentThread().interrupt();
         }
         // update order status TO IN_TRANSIT
         updateOrder(order.getId(), "IN_TRANSIT");
@@ -99,10 +100,9 @@ public class OrderService {
     }
 
     public Integer getTotalDeliveriesByPartnerStoreId(Integer partnerStoreId) {
-        List<Order> allOrders = orderRepository.findAll();
         List<Order> final_lst = new ArrayList<>();
-        for (Order order : allOrders) {
-            if (order.getPickupPoint().getPartnerStore().getId() != partnerStoreId) {
+        for (Order order : orderRepository.findAll()) {
+            if (order.getPickupPoint().getPartnerStore().getId() == partnerStoreId) {
                 final_lst.add(order);
             }
         }
