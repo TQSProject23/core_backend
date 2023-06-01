@@ -66,10 +66,7 @@ public class PickupPointService {
         return pickupPRepository.findAll().size();
     }
 
-    public int countPickupPointsLastMonth() {
-        // TODO: implement this correctly
-        return pickupPRepository.findAll().size();
-    }
+
 
     public PickupPoint getDeliveryById(Integer ppId) {
         return pickupPRepository.findById((long) ppId).orElse(null);
