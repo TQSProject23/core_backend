@@ -15,7 +15,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class OrderService {
-    
+
     private final OrderRepository orderRepository;
 
     private final PickupPRepository pickupPRepository;
@@ -36,9 +36,23 @@ public class OrderService {
         return orderRepository.findByPickupPointId(pickupPointId);
     }
 
-    public Order createOrder(Order order) {
+    public Order addOrder(Order order) {
         order.getPickupPoint().addOrder(order);
         return orderRepository.save(order);
+    }
+
+    public Order createOrder(Order order) {
+
+        addOrder(order);
+        // sleep for 15 seconds
+        try {
+            Thread.sleep(15000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        // update order status TO IN_TRANSIT
+        updateOrder(order.getId(), "IN_TRANSIT");
+        return order;
     }
 
     public Order updateOrder(Integer orderId, String orderStatus) {
@@ -108,5 +122,16 @@ public class OrderService {
             }
         }
         return count;
+    }
+
+    public List<Order> getDeliveriesByClientEmail(String clientEmail) {
+        List<Order> allOrders = orderRepository.findAll();
+        List<Order> final_lst = new ArrayList<>();
+        for (Order order : allOrders) {
+            if (order.getClientEmail().equals(clientEmail)) {
+                final_lst.add(order);
+            }
+        }
+        return final_lst;
     }
 }

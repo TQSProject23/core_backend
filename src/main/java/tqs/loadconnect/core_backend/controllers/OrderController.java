@@ -12,7 +12,7 @@ import java.util.List;
 
 
 @RestController
-@CrossOrigin(origins="*")
+@CrossOrigin(origins="http://localhost:3000")
 @RequestMapping("/api/v1/orders")
 public class OrderController {
 
@@ -69,6 +69,17 @@ public class OrderController {
             return ResponseEntity.notFound().build();
         } else {
             return ResponseEntity.ok().body(order);
+        }
+    }
+
+    // get all orders by client email
+    @GetMapping("/user/{client_email}")
+    public ResponseEntity<List<Order>> getDeliveriesByClientEmail(@PathVariable(value="client_email") String clientEmail) {
+        List<Order> orders = orderService.getDeliveriesByClientEmail(clientEmail);
+        if (orders == null) {
+            return ResponseEntity.notFound().build();
+        } else {
+            return ResponseEntity.ok().body(orders);
         }
     }
 

@@ -12,8 +12,9 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import tqs.loadconnect.core_backend.Utils.Enums.PickupPEnum;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
+
 
 @Entity
 @Getter @Setter
