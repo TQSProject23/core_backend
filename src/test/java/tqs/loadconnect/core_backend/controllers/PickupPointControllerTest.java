@@ -289,6 +289,50 @@ public class PickupPointControllerTest {
         verify(pickupService, times(1)).getAllPickupPointsByCity(anyString());
     }
 
+    @DisplayName("Get All Orders By Pickup Point - Success")
+    @Test
+    void testGetAllOrdersByPickupPoint() throws Exception {
+        // Create a list of sample Order objects
+        List<Order> orders = new ArrayList<>();
+        Order order1 = new Order();
+        order1.setId(1);
+        order1.setStatus(OrderStatusEnum.PENDING);
+        Order order2 = new Order();
+        order2.setId(2);
+        order2.setStatus(OrderStatusEnum.PENDING);
+        orders.add(order1);
+        orders.add(order2);
+
+        // Mock the service method to return the sample Order list
+        when(pickupService.getAllOrdersByPickupPoint(anyInt())).thenReturn(orders);
+
+        // Perform the GET request with the pickup point id parameter
+        mvc.perform(MockMvcRequestBuilders.get("/api/v1/pps/orders/{id}", 1))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$[0].id").value(1))
+                .andExpect(jsonPath("$[0].status").value("PENDING"))
+                .andExpect(jsonPath("$[1].id").value(2))
+                .andExpect(jsonPath("$[1].status").value("PENDING"));
+
+        verify(pickupService, times(1)).getAllOrdersByPickupPoint(anyInt());
+    }
+
+    @DisplayName("Get All Orders By Pickup Point - Failure")
+    @Test
+    void testGetAllOrdersByPickupPointFailure() throws Exception {
+
+        // Mock the service method to return the sample Order list
+        when(pickupService.getAllOrdersByPickupPoint(anyInt())).thenReturn(null);
+
+        // Perform the GET request with the pickup point id parameter
+        mvc.perform(MockMvcRequestBuilders.get("/api/v1/pps/orders/{id}", 1))
+                .andExpect(status().isNotFound());
+
+        verify(pickupService, times(1)).getAllOrdersByPickupPoint(anyInt());
+    }
+
+
     @DisplayName("Get Total Number of Pickup Points - Success")
     @Test
     void testGetTotalNumberOfPickupPoints() throws Exception {

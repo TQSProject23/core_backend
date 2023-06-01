@@ -97,16 +97,6 @@ public class PickupPointController {
         }
     }
 
-    // return total number of pickup points last month
-    @GetMapping("/total/lastmonth")
-    public ResponseEntity<Integer> countPickupPointsLastMonth() {
-        int count = pickupPointService.countPickupPointsLastMonth();
-        if (count == 0) {
-            return ResponseEntity.notFound().build();
-        } else {
-            return ResponseEntity.ok().body(count);
-        }
-    }
 
 
 }
